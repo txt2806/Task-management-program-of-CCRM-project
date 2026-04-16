@@ -46,7 +46,7 @@ public class TaskRepository {
             result.add(new TaskResponseDTO(
                     task.getId(),
                     task.getRequirementName(),
-                    Constants.getTaskTypeName(task.getTaskTypeId()),
+                    Constants.TASK_TYPE_NAMES[task.getTaskTypeId()],
                     task.getDate(),
                     task.getPlanFrom(),
                     task.getPlanTo(),
