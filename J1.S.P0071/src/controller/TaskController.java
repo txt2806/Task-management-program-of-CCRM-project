@@ -1,74 +1,56 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controller;
 
-import model.service.TaskService;
+import constants.Message;
+import dto.TaskRequestDTO;
+import dto.TaskResponseDTO;
+import java.util.Map;
+import repository.TaskRepository;
 import view.TaskView;
 
-import java.util.Scanner;
-
+/**
+ *
+ * @author thanh
+ */
 public class TaskController {
 
-    private TaskService service;
-    private Scanner sc = new Scanner(System.in);
+    private TaskRepository taskRepository;
+    private TaskView taskView;
 
-    public TaskController(TaskService service) {
-        this.service = service;
+    //constructor co chua view va repository
+    public TaskController() {
+        taskRepository = new TaskRepository();
+        taskView = new TaskView();
     }
 
-    public void run() {
-        while (true) {
-            TaskView.menu();
-            int choice = Integer.parseInt(sc.nextLine());
+    //Function 1: Add Task
+    public void addTask(TaskRequestDTO requestDTO) throws Exception {
+        taskRepository.addTask(requestDTO);
+    }
 
-            try {
-                switch (choice) {
-                    case 1:
-                        add();
-                        break;
-                    case 2:
-                        delete();
-                        break;
-                    case 3:
-                        TaskView.display(service.getDataTasks());
-                        break;
-                    case 4:
-                        return;
-                }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+    //Function 2: Delete Task
+    public void deleteTask(int id) throws Exception {
+        //Kiem tra xem co ton tai hay k
+        if (!taskRepository.isExistTask(id)) {
+            throw new Exception(Message.NO_TASK_AVAILABLE);
         }
+        taskRepository.deleteTask(id);
     }
 
-    private void add() throws Exception {
-        System.out.print("Name: ");
-        String name = sc.nextLine();
-
-        System.out.print("Type: ");
-        String type = sc.nextLine();
-
-        System.out.print("Date: ");
-        String date = sc.nextLine();
-
-        System.out.print("From: ");
-        String from = sc.nextLine();
-
-        System.out.print("To: ");
-        String to = sc.nextLine();
-
-        System.out.print("Assignee: ");
-        String assignee = sc.nextLine();
-
-        System.out.print("Reviewer: ");
-        String reviewer = sc.nextLine();
-
-        int id = service.addTask(name, assignee, reviewer, type, date, from, to);
-        System.out.println("Added ID: " + id);
-    }
-
-    private void delete() throws Exception {
-        System.out.print("ID: ");
-        String id = sc.nextLine();
-        service.deleteTask(id);
-        System.out.println("Deleted!");
+    //Function 3: Display all tasks
+    public void displayTasks() throws Exception {
+        //Kiem tra database co du lieu truoc khi display
+        if (taskRepository.isEmpty()) {
+            throw new Exception(Message.DATABASE_EMPTY);
+        }
+        //Lay tat ca task
+        Map<Integer, TaskResponseDTO> result = taskRepository.getAllTasks();
+        //Truyen du lieu sang view
+        taskView.setTaskMap(result);
+        taskView.display();
     }
 }

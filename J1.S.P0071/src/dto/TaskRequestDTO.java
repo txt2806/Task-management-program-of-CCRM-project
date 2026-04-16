@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package dto;
 
 /**
  *
  * @author thanh
  */
-public class Task {
+public class TaskRequestDTO {
 
-    private int id;
-    private int taskTypeId;
     private String requirementName;
+    private int taskTypeId;
     private String date;
     private double planFrom;
     private double planTo;
@@ -21,30 +20,16 @@ public class Task {
     private String reviewer;
 
     //constructor khong tham so
-    public Task() {
-    }
-
-    //constructor co tham so
-    public Task(int id, int taskTypeId, String requirementName,
-            String date, double planFrom, double planTo,
-            String assignee, String reviewer) {
-        this.id = id;
-        this.taskTypeId = taskTypeId;
-        this.requirementName = requirementName;
-        this.date = date;
-        this.planFrom = planFrom;
-        this.planTo = planTo;
-        this.assignee = assignee;
-        this.reviewer = reviewer;
+    public TaskRequestDTO() {
     }
 
     //getter & setter
-    public int getId() {
-        return id;
+    public String getRequirementName() {
+        return requirementName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRequirementName(String requirementName) {
+        this.requirementName = requirementName;
     }
 
     public int getTaskTypeId() {
@@ -53,14 +38,6 @@ public class Task {
 
     public void setTaskTypeId(int taskTypeId) {
         this.taskTypeId = taskTypeId;
-    }
-
-    public String getRequirementName() {
-        return requirementName;
-    }
-
-    public void setRequirementName(String requirementName) {
-        this.requirementName = requirementName;
     }
 
     public String getDate() {
@@ -101,12 +78,5 @@ public class Task {
 
     public void setReviewer(String reviewer) {
         this.reviewer = reviewer;
-    }
-
-    //in ra thong tin
-    @Override
-    public String toString() {
-        return String.format("%-5d %-20s %-5d %-12s %-7.1f %-7.1f %-12s %-12s",
-                id, requirementName, taskTypeId, date, planFrom, planTo, assignee, reviewer);
     }
 }
