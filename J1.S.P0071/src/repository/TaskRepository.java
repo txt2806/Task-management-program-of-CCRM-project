@@ -1,34 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package repository;
 
 import constants.Constants;
 import dto.TaskRequestDTO;
 import dto.TaskResponseDTO;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import model.Task;
 
-/**
- *
- * @author thanh
- */
 public class TaskRepository {
 
-    //Danh sach task
-    private Map<Integer, Task> taskMap = new HashMap<>();
-    //Auto increment ID
+    // Dung TreeMap de tu dong sap xep theo ID tang dan
+    private TreeMap<Integer, Task> taskMap = new TreeMap<>();
+    // Auto increment ID
     private int currentId = 1;
 
-    //constructor
     public TaskRepository() {
     }
 
-    //add task
-    public boolean addTask(TaskRequestDTO requestDTO) {
+    // Them task tu RequestDTO, tra ve id task
+    public int addTask(TaskRequestDTO requestDTO) {
         Task task = new Task(
                 currentId,
                 requestDTO.getTaskTypeId(),
@@ -40,22 +31,19 @@ public class TaskRepository {
                 requestDTO.getReviewer()
         );
         taskMap.put(currentId, task);
-        currentId++;
-        return true;
+        return currentId++;
     }
 
-    //delete task
-    public boolean deleteTask(int id) {
+    // Xoa task theo id
+    public void deleteTask(int id) {
         taskMap.remove(id);
-        return true;
     }
 
-    //get all tasks -> tra ve Map<Integer, TaskResponseDTO>
-    public Map<Integer, TaskResponseDTO> getAllTasks() {
-        Map<Integer, TaskResponseDTO> result = new HashMap<>();
-
+    // Lay tat ca task dang ResponseDTO, da sap xep theo ID tang dan
+    public List<TaskResponseDTO> getDataTasks() {
+        List<TaskResponseDTO> result = new ArrayList<>();
         for (Task task : taskMap.values()) {
-            result.put(task.getId(), new TaskResponseDTO(
+            result.add(new TaskResponseDTO(
                     task.getId(),
                     task.getRequirementName(),
                     Constants.getTaskTypeName(task.getTaskTypeId()),
@@ -69,12 +57,12 @@ public class TaskRepository {
         return result;
     }
 
-    //kiem tra xem co ton tai task hay k
+    // Kiem tra task co ton tai khong
     public boolean isExistTask(int id) {
         return taskMap.containsKey(id);
     }
 
-    //kiem tra xem co rong k
+    // Kiem tra database co rong khong
     public boolean isEmpty() {
         return taskMap.isEmpty();
     }

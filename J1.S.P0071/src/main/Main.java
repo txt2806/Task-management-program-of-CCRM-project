@@ -1,95 +1,81 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main;
 
 import constants.Message;
 import controller.TaskController;
-import dto.TaskRequestDTO;
+import dto.TaskResponseDTO;
+import java.util.List;
 import java.util.Scanner;
 import utils.Validation;
+import view.TaskView;
 
-/**
- *
- * @author thanh
- */
 public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         TaskController controller = new TaskController();
+        TaskView view = new TaskView();
+
         while (true) {
-            //Hien thi menu
+            // Hien thi menu
             System.out.println(Message.MENU);
-            //Hien thi lua chon
-            System.out.println(Message.INPUT_CHOICE);
+            System.out.print(Message.INPUT_CHOICE);
+
             try {
                 int choice = Validation.getChoice(sc.nextLine(), 1, 4);
+
                 switch (choice) {
-
-                    //add task
+                    // Add Task
                     case 1:
-                        // tao dto de nhap du lieu
-                        TaskRequestDTO dto = new TaskRequestDTO();
-
-                        //nhap requirement name
-                        System.out.print(Message.INPUT_NAME);
-                        dto.setRequirementName(Validation.getString(sc.nextLine()));
-
-                        //nhap task type
                         System.out.print(Message.INPUT_TASK_TYPE);
-                        dto.setTaskTypeId(Validation.getTaskType(sc.nextLine()));
+                        String taskTypeID = sc.nextLine();
 
-                        //nhap date
+                        System.out.print(Message.INPUT_NAME);
+                        String requirementName = sc.nextLine();
+
                         System.out.print(Message.INPUT_DATE);
-                        dto.setDate(Validation.getValidDate(sc.nextLine()));
+                        String date = sc.nextLine();
 
-                        //nhap plan from
                         System.out.print(Message.INPUT_PLAN_FROM);
-                        double planFrom = Validation.getValidTime(sc.nextLine());
-                        dto.setPlanFrom(planFrom);
+                        String planFrom = sc.nextLine();
 
-                        //nhap plan to
                         System.out.print(Message.INPUT_PLAN_TO);
-                        double planTo = Validation.getValidTime(sc.nextLine());
-                        //kiem tra plan from < plan to
-                        if (planFrom >= planTo) {
-                            throw new Exception(Message.INVALID_TIME_RANGE);
-                        }
-                        dto.setPlanTo(planTo);
+                        String planTo = sc.nextLine();
 
-                        //nhap assignee
                         System.out.print(Message.INPUT_ASSIGNEE);
-                        dto.setAssignee(Validation.getString(sc.nextLine()));
+                        String assignee = sc.nextLine();
 
-                        //nhap reviewer
                         System.out.print(Message.INPUT_REVIEWER);
-                        dto.setReviewer(Validation.getString(sc.nextLine()));
+                        String reviewer = sc.nextLine();
 
-                        controller.addTask(dto);
+                        int newId = controller.addTask(requirementName,
+                                assignee, reviewer, taskTypeID,
+                                date, planFrom, planTo);
+
                         System.out.println(Message.ADD_SUCCESS);
                         break;
 
-                    //delete task
+                    // Delete Task
                     case 2:
-                        //nhap id can xoa
                         System.out.print(Message.INPUT_ID);
-                        int deleteId = Validation.getPositiveInteger(sc.nextLine());
+                        String deleteId = sc.nextLine();
                         controller.deleteTask(deleteId);
                         System.out.println(Message.DELETE_SUCCESS);
                         break;
 
-                    //display tasks
+                    // Display Tasks
                     case 3:
-                        controller.displayTasks();
+                        List<TaskResponseDTO> tasks = controller.getDataTasks();
+                        view.display(tasks);
                         break;
 
-                    //Thoat chuong trinh
+                    // Exit
                     case 4:
                         return;
                 }
+            } catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
+            } catch (NullPointerException e) {
+                System.out.println(e.getMessage());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

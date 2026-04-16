@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import constants.Message;
@@ -10,64 +5,60 @@ import java.text.SimpleDateFormat;
 
 public final class Validation {
 
-    //private constructor
     private Validation() {
     }
 
-    //ham nhap chuoi va validate
+    // Validate chuoi khong duoc rong
     public static String getString(String input) throws Exception {
-        if (input == null || input.isEmpty()) {
-            throw new Exception(Message.EMPTY_INPUT);
+        if (input == null || input.trim().isEmpty()) {
+            throw new NullPointerException(Message.EMPTY_INPUT);
         }
         return input.trim();
     }
 
-    //Ham lay so nguyen duong
-    public static int getPositiveInteger(String input) throws Exception {
-        try {
-            int number = Integer.parseInt(input.trim());
-            //kiem tra xem so co > 0 hay k
-            if (number <= 0) {
-                throw new Exception(Message.POSITIVE_NUMBER);
-            }
-            return number;
-        } catch (NumberFormatException e) {
-            //thong bao loi
-            throw new Exception(Message.INVALID_NUMBER);
-        }
-    }
-
-    //Ham lay so thuc duong
-    public static double getPositiveDouble(String input) throws Exception {
-        try {
-            double number = Double.parseDouble(input.trim());
-            if (number <= 0) {
-                throw new Exception(Message.POSITIVE_NUMBER);
-            }
-            return number;
-        } catch (NumberFormatException e) {
-            throw new Exception(Message.INVALID_NUMBER);
-        }
-    }
-
-    //Ham validate choice
+    // Validate choice trong khoang min-max
     public static int getChoice(String input, int min, int max) throws Exception {
         try {
             int choice = Integer.parseInt(input.trim());
-            if ((choice < min) || (choice > max)) {
-                throw new Exception(String.format(Message.INVALID_RANGE, min, max));
+            if (choice < min || choice > max) {
+                throw new Exception(Message.INVALID_CHOICE);
             }
             return choice;
         } catch (NumberFormatException e) {
-            //thong bao loi
-            throw new Exception(Message.INVALID_NUMBER);
+            throw new NumberFormatException(Message.INVALID_NUMBER);
         }
     }
 
-    //Ham validate date format dd-MM-yyyy
+    // Validate so nguyen duong
+    public static int getPositiveInteger(String input) throws Exception {
+        try {
+            int number = Integer.parseInt(input.trim());
+            if (number <= 0) {
+                throw new Exception(Message.INVALID_NUMBER);
+            }
+            return number;
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(Message.INVALID_NUMBER);
+        }
+    }
+
+    // Validate task type (1-4)
+    public static int getTaskType(String input) throws Exception {
+        try {
+            int type = Integer.parseInt(input.trim());
+            if (type < 1 || type > 4) {
+                throw new Exception(Message.INVALID_TASK_TYPE);
+            }
+            return type;
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(Message.INVALID_NUMBER);
+        }
+    }
+
+    // Validate date format dd-MM-yyyy dung SimpleDateFormat
     public static String getValidDate(String input) throws Exception {
         if (input == null || input.trim().isEmpty()) {
-            throw new Exception(Message.EMPTY_INPUT);
+            throw new NullPointerException(Message.EMPTY_INPUT);
         }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -79,7 +70,7 @@ public final class Validation {
         }
     }
 
-    //Ham validate time (8.0 - 17.5, step 0.5)
+    // Validate time (8.0 - 17.5, step 0.5)
     public static double getValidTime(String input) throws Exception {
         try {
             double time = Double.parseDouble(input.trim());
@@ -88,20 +79,7 @@ public final class Validation {
             }
             return time;
         } catch (NumberFormatException e) {
-            throw new Exception(Message.INVALID_NUMBER);
-        }
-    }
-
-    //Ham validate task type (1-4)
-    public static int getTaskType(String input) throws Exception {
-        try {
-            int type = Integer.parseInt(input.trim());
-            if (type < 1 || type > 4) {
-                throw new Exception(Message.INVALID_TASK_TYPE);
-            }
-            return type;
-        } catch (NumberFormatException e) {
-            throw new Exception(Message.INVALID_NUMBER);
+            throw new NumberFormatException(Message.INVALID_NUMBER);
         }
     }
 }

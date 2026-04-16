@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dto;
 
-/**
- *
- * @author thanh
- */
 public class TaskRequestDTO {
 
     private String requirementName;
@@ -19,11 +10,10 @@ public class TaskRequestDTO {
     private String assignee;
     private String reviewer;
 
-    //constructor khong tham so
     public TaskRequestDTO() {
     }
 
-    //getter & setter
+    // Getter & Setter
     public String getRequirementName() {
         return requirementName;
     }

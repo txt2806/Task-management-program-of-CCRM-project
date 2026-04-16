@@ -1,56 +1,75 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import constants.Message;
 import dto.TaskRequestDTO;
 import dto.TaskResponseDTO;
-import java.util.Map;
+import java.util.List;
 import repository.TaskRepository;
-import view.TaskView;
+import utils.Validation;
 
-/**
- *
- * @author thanh
- */
 public class TaskController {
 
     private TaskRepository taskRepository;
-    private TaskView taskView;
 
-    //constructor co chua view va repository
     public TaskController() {
         taskRepository = new TaskRepository();
-        taskView = new TaskView();
     }
 
-    //Function 1: Add Task
-    public void addTask(TaskRequestDTO requestDTO) throws Exception {
-        taskRepository.addTask(requestDTO);
+    /**
+     * Add task - nhan tat ca tham so la String, dung Validation de validate.
+     * Tra ve id cua task vua them.
+     */
+    public int addTask(String requirementName, String assignee,
+            String reviewer, String taskTypeID, String date,
+            String planFrom, String planTo) throws Exception {
+
+        // Validate bang Validation utility
+        String validName = Validation.getString(requirementName);
+        String validAssignee = Validation.getString(assignee);
+        String validReviewer = Validation.getString(reviewer);
+        int validTypeId = Validation.getTaskType(taskTypeID);
+        String validDate = Validation.getValidDate(date);
+        double validFrom = Validation.getValidTime(planFrom);
+        double validTo = Validation.getValidTime(planTo);
+
+        // Kiem tra plan from < plan to
+        if (validFrom >= validTo) {
+            throw new Exception(Message.INVALID_TIME_RANGE);
+        }
+
+        // Tao RequestDTO tu du lieu da validate
+        TaskRequestDTO requestDTO = new TaskRequestDTO();
+        requestDTO.setRequirementName(validName);
+        requestDTO.setTaskTypeId(validTypeId);
+        requestDTO.setDate(validDate);
+        requestDTO.setPlanFrom(validFrom);
+        requestDTO.setPlanTo(validTo);
+        requestDTO.setAssignee(validAssignee);
+        requestDTO.setReviewer(validReviewer);
+
+        return taskRepository.addTask(requestDTO);
     }
 
-    //Function 2: Delete Task
-    public void deleteTask(int id) throws Exception {
-        //Kiem tra xem co ton tai hay k
-        if (!taskRepository.isExistTask(id)) {
+    /**
+     * Delete task - nhan id la String, validate bang Validation.
+     */
+    public void deleteTask(String id) throws Exception {
+        int taskId = Validation.getPositiveInteger(id);
+
+        if (!taskRepository.isExistTask(taskId)) {
             throw new Exception(Message.NO_TASK_AVAILABLE);
         }
-        taskRepository.deleteTask(id);
+
+        taskRepository.deleteTask(taskId);
     }
 
-    //Function 3: Display all tasks
-    public void displayTasks() throws Exception {
-        //Kiem tra database co du lieu truoc khi display
+    /**
+     * Lay danh sach tat ca task dang ResponseDTO, da sap xep theo ID tang dan.
+     */
+    public List<TaskResponseDTO> getDataTasks() throws Exception {
         if (taskRepository.isEmpty()) {
             throw new Exception(Message.DATABASE_EMPTY);
         }
-        //Lay tat ca task
-        Map<Integer, TaskResponseDTO> result = taskRepository.getAllTasks();
-        //Truyen du lieu sang view
-        taskView.setTaskMap(result);
-        taskView.display();
+        return taskRepository.getDataTasks();
     }
 }

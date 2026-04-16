@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dto;
 
-/**
- *
- * @author thanh
- */
 public class TaskResponseDTO {
 
     private int id;
@@ -20,11 +11,9 @@ public class TaskResponseDTO {
     private String assignee;
     private String reviewer;
 
-    //constructor khong tham so
     public TaskResponseDTO() {
     }
 
-    //constructor co tham so
     public TaskResponseDTO(int id, String requirementName, String taskTypeName,
             String date, double planFrom, double planTo,
             String assignee, String reviewer) {
@@ -38,7 +27,7 @@ public class TaskResponseDTO {
         this.reviewer = reviewer;
     }
 
-    //getter & setter
+    // Getter & Setter
     public int getId() {
         return id;
     }
@@ -103,7 +92,6 @@ public class TaskResponseDTO {
         this.reviewer = reviewer;
     }
 
-    //in ra thong tin
     @Override
     public String toString() {
         return String.format("%-5d %-20s %-10s %-12s %-7.1f %-7.1f %-12s %-12s",
